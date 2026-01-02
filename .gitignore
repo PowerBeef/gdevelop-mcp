@@ -5,6 +5,7 @@
 .env
 .env.*
 *.log
+tmp/
 
 gdevelop-mcp-server/node_modules/
 gdevelop-mcp-server/build/
