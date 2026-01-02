@@ -28,7 +28,7 @@
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "gdcore-tools": "^1.0.0",
+    "gdcore-tools": "2.0.0-gd-v5.6.251-autobuild",
     "gdexporter": "^2.0.0",
     "zod": "^3.23.8",
     "pino": "^9.5.0"

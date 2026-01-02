@@ -443,8 +443,8 @@ export interface GD {
   Variable: new () => GDVariable;
 
   // Event handlers
-  on(event: 'print', callback: (message: string) => void): void;
-  on(event: 'error', callback: (message: string) => void): void;
+  on?(event: 'print', callback: (message: string) => void): void;
+  on?(event: 'error', callback: (message: string) => void): void;
 }
 
 /**
@@ -454,12 +454,15 @@ export interface GDTools {
   gd: GD;
   loadProject(path: string): Promise<GDProject>;
   saveProject(project: GDProject, fileName?: string, filePath?: string): Promise<void>;
-  exportProject(project: GDProject, outputDir: string, options?: ExportOptions): void;
-  reloadEventsFunctions(project: GDProject): void;
-  getRuntimePath(): string;
+  exportProject?: (
+    project: GDProject,
+    outputDir: string,
+    exportTarget?: ExportTarget
+  ) => void;
+  runtimePath?: string;
+  localFileSystem?: unknown;
+  gd_internal_logs?: string;
+  getRuntimePath?: () => string;
 }
 
-export interface ExportOptions {
-  buildType?: 'html5' | 'electron' | 'cordova' | 'facebook';
-  plugins?: unknown[];
-}
+export type ExportTarget = 'electron' | 'cordova' | 'facebookInstantGames';

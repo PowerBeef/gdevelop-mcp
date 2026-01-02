@@ -27,19 +27,27 @@ export class GDCoreManager {
       logger.info({ version: version || 'latest' }, 'Initializing GDCore');
 
       try {
-        // Dynamic import of gdcore-tools
-        const loadGD = (await import('gdcore-tools')).default;
-        const gdtools = await loadGD(version);
+        // Dynamic import of gdcore-tools (v2 exports a ready-to-use module)
+        const gdtools = (await import('gdcore-tools')) as unknown as GDTools;
         this.gdtools = gdtools;
 
-        // Set up event handlers
-        gdtools.gd.on('print', (msg: string) => {
-          logger.debug({ source: 'GDCore' }, msg);
-        });
+        if (version) {
+          logger.info(
+            { version },
+            'GDCore version override requested (gdcore-tools v2 may ignore this)'
+          );
+        }
 
-        gdtools.gd.on('error', (msg: string) => {
-          logger.error({ source: 'GDCore' }, msg);
-        });
+        const gdOn = (gdtools.gd as GD | undefined)?.on;
+        if (typeof gdOn === 'function') {
+          gdOn('print', (msg: string) => {
+            logger.debug({ source: 'GDCore' }, msg);
+          });
+
+          gdOn('error', (msg: string) => {
+            logger.error({ source: 'GDCore' }, msg);
+          });
+        }
 
         logger.info('GDCore initialized successfully');
       } catch (error) {
@@ -115,7 +123,14 @@ export class GDCoreManager {
    * Get the GDevelop runtime path.
    */
   getRuntimePath(): string {
-    return this.getGDTools().getRuntimePath();
+    const gdtools = this.getGDTools();
+    if (typeof gdtools.getRuntimePath === 'function') {
+      return gdtools.getRuntimePath();
+    }
+    if (typeof gdtools.runtimePath === 'string') {
+      return gdtools.runtimePath;
+    }
+    throw new Error('GDCore runtime path is not available.');
   }
 
   /**
