@@ -1,5 +1,13 @@
 .DS_Store
 .claude/
+.idea/
+.vscode/
+.env
+.env.*
+*.log
 
 gdevelop-mcp-server/node_modules/
 gdevelop-mcp-server/build/
+gdevelop-mcp-server/coverage/
+gdevelop-mcp-server/.eslintcache
+gdevelop-mcp-server/.vitest/
